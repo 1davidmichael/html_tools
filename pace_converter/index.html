@@ -183,16 +183,16 @@
         <p class="subtitle">Convert between min/km and min/mi</p>
 
         <div class="conversion-type">
-            <button id="kmToMiBtn" class="active" onclick="setConversionType('kmToMi')">
+            <button id="kmToMiBtn" onclick="setConversionType('kmToMi')">
                 min/km → min/mi
             </button>
-            <button id="miToKmBtn" onclick="setConversionType('miToKm')">
+            <button id="miToKmBtn" class="active" onclick="setConversionType('miToKm')">
                 min/mi → min/km
             </button>
         </div>
 
         <div class="input-section">
-            <label id="inputLabel">Enter pace (min/km):</label>
+            <label id="inputLabel">Enter pace (min/mi):</label>
             <div class="time-input">
                 <div class="time-group">
                     <input type="number" id="minutes" min="0" max="99" value="5" oninput="convert()">
@@ -209,17 +209,13 @@
         <div class="arrow">↓</div>
 
         <div class="result">
-            <div class="result-label" id="resultLabel">Pace in min/mi:</div>
-            <div class="result-value" id="resultValue">8:03</div>
-        </div>
-
-        <div class="info">
-            <strong>Tip:</strong> 1 mile = 1.60934 km. A faster pace means fewer minutes per distance unit.
+            <div class="result-label" id="resultLabel">Pace in min/km:</div>
+            <div class="result-value" id="resultValue">3:06</div>
         </div>
     </div>
 
     <script>
-        let conversionType = 'kmToMi';
+        let conversionType = 'miToKm';
         const KM_TO_MILE = 1.60934;
 
         function setConversionType(type) {

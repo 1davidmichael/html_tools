@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Race Time Calculator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-width: 600px;
+            width: 100%;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 28px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+
+        .pace-type {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+        }
+
+        .pace-type button {
+            flex: 1;
+            padding: 12px;
+            border: 2px solid #f5576c;
+            background: white;
+            color: #f5576c;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .pace-type button.active {
+            background: #f5576c;
+            color: white;
+        }
+
+        .pace-type button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(245, 87, 108, 0.3);
+        }
+
+        .input-section {
+            margin-bottom: 30px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .time-input {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .time-group {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .time-group input {
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 18px;
+            text-align: center;
+            transition: border-color 0.3s ease;
+        }
+
+        .time-group input:focus {
+            outline: none;
+            border-color: #f5576c;
+        }
+
+        .time-group span {
+            font-size: 12px;
+            color: #999;
+            margin-top: 4px;
+            text-align: center;
+        }
+
+        .separator {
+            font-size: 24px;
+            color: #999;
+            font-weight: bold;
+            margin-bottom: 16px;
+        }
+
+        .results-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .results {
+            display: grid;
+            gap: 15px;
+        }
+
+        .race-result {
+            background: linear-gradient(135deg, #fff5f7 0%, #ffe5ea 100%);
+            border: 2px solid #f5576c;
+            border-radius: 10px;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: transform 0.2s ease;
+        }
+
+        .race-result:hover {
+            transform: translateX(5px);
+        }
+
+        .race-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .race-name {
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 4px;
+        }
+
+        .race-distance {
+            font-size: 12px;
+            color: #666;
+        }
+
+        .race-time {
+            font-size: 28px;
+            font-weight: bold;
+            color: #f5576c;
+        }
+
+        .info {
+            margin-top: 20px;
+            padding: 15px;
+            background: #d1ecf1;
+            border-left: 4px solid #17a2b8;
+            border-radius: 4px;
+            font-size: 14px;
+            color: #0c5460;
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 30px 20px;
+            }
+
+            h1 {
+                font-size: 24px;
+            }
+
+            .race-time {
+                font-size: 24px;
+            }
+
+            .race-name {
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>⏱️ Race Time Calculator</h1>
+        <p class="subtitle">Calculate your race times based on pace</p>
+
+        <div class="pace-type">
+            <button id="kmBtn" onclick="setPaceType('km')">
+                min/km
+            </button>
+            <button id="miBtn" class="active" onclick="setPaceType('mi')">
+                min/mi
+            </button>
+        </div>
+
+        <div class="input-section">
+            <label id="inputLabel">Enter your pace (min/mi):</label>
+            <div class="time-input">
+                <div class="time-group">
+                    <input type="number" id="minutes" min="0" max="99" value="5" oninput="calculate()">
+                    <span>minutes</span>
+                </div>
+                <div class="separator">:</div>
+                <div class="time-group">
+                    <input type="number" id="seconds" min="0" max="59" value="30" oninput="calculate()">
+                    <span>seconds</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="results-title">Your Race Times:</div>
+        <div class="results">
+            <div class="race-result">
+                <div class="race-info">
+                    <div class="race-name">5K</div>
+                    <div class="race-distance">3.1 mi</div>
+                </div>
+                <div class="race-time" id="time5k">0:00:00</div>
+            </div>
+
+            <div class="race-result">
+                <div class="race-info">
+                    <div class="race-name">10K</div>
+                    <div class="race-distance">6.2 mi</div>
+                </div>
+                <div class="race-time" id="time10k">0:00:00</div>
+            </div>
+
+            <div class="race-result">
+                <div class="race-info">
+                    <div class="race-name">Half Marathon</div>
+                    <div class="race-distance" id="halfDistance">13.1094 mi</div>
+                </div>
+                <div class="race-time" id="timeHalf">0:00:00</div>
+            </div>
+
+            <div class="race-result">
+                <div class="race-info">
+                    <div class="race-name">Marathon</div>
+                    <div class="race-distance" id="marathonDistance">26.2188 mi</div>
+                </div>
+                <div class="race-time" id="timeMarathon">0:00:00</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let paceType = 'mi';
+        const KM_TO_MILE = 1.60934;
+
+        const DISTANCES = {
+            '5k': 5.0,
+            '10k': 10.0,
+            'half': 21.0975,
+            'marathon': 42.195
+        };
+
+        const DISTANCES_MILES = {
+            '5k': 3.10686,
+            '10k': 6.21371,
+            'half': 13.1094,
+            'marathon': 26.2188
+        };
+
+        function setPaceType(type) {
+            paceType = type;
+
+            document.getElementById('kmBtn').classList.remove('active');
+            document.getElementById('miBtn').classList.remove('active');
+
+            if (type === 'km') {
+                document.getElementById('kmBtn').classList.add('active');
+                document.getElementById('inputLabel').textContent = 'Enter your pace (min/km):';
+                document.getElementById('halfDistance').textContent = '21.0975 km';
+                document.getElementById('marathonDistance').textContent = '42.195 km';
+            } else {
+                document.getElementById('miBtn').classList.add('active');
+                document.getElementById('inputLabel').textContent = 'Enter your pace (min/mi):';
+                document.getElementById('halfDistance').textContent = '13.1094 mi';
+                document.getElementById('marathonDistance').textContent = '26.2188 mi';
+            }
+
+            calculate();
+        }
+
+        function formatTime(totalSeconds) {
+            const hours = Math.floor(totalSeconds / 3600);
+            const minutes = Math.floor((totalSeconds % 3600) / 60);
+            const seconds = Math.round(totalSeconds % 60);
+
+            const formattedHours = hours.toString();
+            const formattedMinutes = minutes.toString().padStart(2, '0');
+            const formattedSeconds = seconds.toString().padStart(2, '0');
+
+            return `${formattedHours}:${formattedMinutes}:${formattedSeconds}`;
+        }
+
+        function calculate() {
+            const minutes = parseInt(document.getElementById('minutes').value) || 0;
+            const seconds = parseInt(document.getElementById('seconds').value) || 0;
+
+            const paceInSeconds = minutes * 60 + seconds;
+
+            if (paceInSeconds === 0) {
+                document.getElementById('time5k').textContent = '0:00:00';
+                document.getElementById('time10k').textContent = '0:00:00';
+                document.getElementById('timeHalf').textContent = '0:00:00';
+                document.getElementById('timeMarathon').textContent = '0:00:00';
+                return;
+            }
+
+            const distances = paceType === 'km' ? DISTANCES : DISTANCES_MILES;
+
+            const time5k = paceInSeconds * distances['5k'];
+            const time10k = paceInSeconds * distances['10k'];
+            const timeHalf = paceInSeconds * distances['half'];
+            const timeMarathon = paceInSeconds * distances['marathon'];
+
+            document.getElementById('time5k').textContent = formatTime(time5k);
+            document.getElementById('time10k').textContent = formatTime(time10k);
+            document.getElementById('timeHalf').textContent = formatTime(timeHalf);
+            document.getElementById('timeMarathon').textContent = formatTime(timeMarathon);
+        }
+
+        calculate();
+    </script>
+</body>
+</html>
